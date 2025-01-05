@@ -61,7 +61,6 @@ export const CartProvider = ({children}) => {
       const updatedItems = prevItems.filter(
         item => item.product.id !== productId,
       );
-      // Save to AsyncStorage
       saveCart(updatedItems);
       return updatedItems;
     });
