@@ -17,21 +17,41 @@ import {useCart} from '../contexts/CartContext';
 const {width} = Dimensions.get('window');
 
 const ProductDetailScreen = ({route, navigation}) => {
-  const {product} = route.params;
+  const {product, allProducts} = route.params;
   const {isFavorite, toggleFavorite} = useFavorites();
   const {addToCart} = useCart();
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const currentIndex = allProducts.findIndex(p => p.id === product.id);
+  const totalProducts = allProducts.length;
+
+  const navigateToProduct = direction => {
+    let newIndex =
+      direction === 'next'
+        ? (currentIndex + 1) % totalProducts
+        : (currentIndex - 1 + totalProducts) % totalProducts;
+
+    navigation.push('ProductDetail', {
+      product: allProducts[newIndex],
+      allProducts,
+    });
+  };
 
   const discountedPrice =
     product.price * (1 - product.discountPercentage / 100);
 
   const handleAddToCart = () => {
     addToCart(product);
-    // Here you can add a toast or feedback for user
   };
 
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.navigationIndicator}>
+        <Text style={styles.navigationText}>
+          {currentIndex + 1} / {totalProducts}
+        </Text>
+      </View>
+
       <Image
         source={{uri: product.thumbnail}}
         style={styles.mainImage}
@@ -110,9 +130,52 @@ const ProductDetailScreen = ({route, navigation}) => {
           <Icon name="shopping-cart" size={24} color="#fff" />
           <Text style={styles.addToCartText}>Add to Cart</Text>
         </TouchableOpacity>
+
+        <View style={styles.bottomNavigation}>
+          <TouchableOpacity
+            style={[
+              styles.navButton,
+              currentIndex === 0 && styles.navButtonDisabled,
+            ]}
+            onPress={() => navigateToProduct('prev')}
+            disabled={currentIndex === 0}>
+            <Icon
+              name="arrow-back-ios"
+              size={24}
+              color={currentIndex === 0 ? '#ccc' : '#f4511e'}
+            />
+            <Text
+              style={[
+                styles.navButtonText,
+                currentIndex === 0 && styles.navButtonTextDisabled,
+              ]}>
+              Previous
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.navButton,
+              currentIndex === totalProducts - 1 && styles.navButtonDisabled,
+            ]}
+            onPress={() => navigateToProduct('next')}
+            disabled={currentIndex === totalProducts - 1}>
+            <Text
+              style={[
+                styles.navButtonText,
+                currentIndex === totalProducts - 1 &&
+                  styles.navButtonTextDisabled,
+              ]}>
+              Next
+            </Text>
+            <Icon
+              name="arrow-forward-ios"
+              size={24}
+              color={currentIndex === totalProducts - 1 ? '#ccc' : '#f4511e'}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
-      {/* Full Screen Image Modal */}
       <Modal visible={!!selectedImage} transparent={true}>
         <View style={styles.modalContainer}>
           <TouchableOpacity
@@ -139,6 +202,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  navigationIndicator: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 8,
+    borderRadius: 20,
+    zIndex: 1,
+  },
+  navigationText: {
+    color: '#fff',
+    fontSize: 14,
   },
   mainImage: {
     width: '100%',
@@ -233,6 +309,31 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     marginLeft: 8,
+  },
+  bottomNavigation: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    marginTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  navButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    borderRadius: 8,
+  },
+  navButtonDisabled: {
+    opacity: 0.5,
+  },
+  navButtonText: {
+    fontSize: 16,
+    color: '#f4511e',
+    marginHorizontal: 8,
+  },
+  navButtonTextDisabled: {
+    color: '#ccc',
   },
   modalContainer: {
     flex: 1,

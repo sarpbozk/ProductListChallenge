@@ -1,18 +1,21 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import AppNavigator from './navigation/AppNavigator';
+import {ThemeProvider} from './contexts/ThemeContext';
 import {FavoritesProvider} from './contexts/FavoritesContext';
 import {CartProvider} from './contexts/CartContext';
+import AppNavigator from './navigation/AppNavigator';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <FavoritesProvider>
-        <CartProvider>
-          <AppNavigator />
-        </CartProvider>
-      </FavoritesProvider>
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        <FavoritesProvider>
+          <CartProvider>
+            <AppNavigator />
+          </CartProvider>
+        </FavoritesProvider>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 

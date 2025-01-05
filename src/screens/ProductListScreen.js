@@ -59,7 +59,12 @@ const ProductListScreen = () => {
       isFavorite={isFavorite(item.id)}
       onFavoritePress={() => toggleFavorite(item)}
       onAddToCart={() => addToCart(item)}
-      onPress={() => navigation.navigate('ProductDetail', {product: item})}
+      onPress={() =>
+        navigation.navigate('ProductDetail', {
+          product: item,
+          allProducts: products,
+        })
+      }
     />
   );
 
