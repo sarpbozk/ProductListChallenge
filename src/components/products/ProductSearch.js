@@ -1,13 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {debounce} from 'lodash';
 
 const ProductSearch = ({onSearch}) => {
   const [searchText, setSearchText] = useState('');
 
+  const debouncedSearch = useCallback(
+    debounce(searchValue => {
+      onSearch(searchValue);
+    }, 1500),
+    [onSearch],
+  );
+
   const handleSearch = text => {
     setSearchText(text);
-    onSearch(text);
+    debouncedSearch(text);
   };
 
   return (
@@ -18,6 +26,7 @@ const ProductSearch = ({onSearch}) => {
         placeholder="Search products..."
         value={searchText}
         onChangeText={handleSearch}
+        autoCorrect={false}
       />
     </View>
   );

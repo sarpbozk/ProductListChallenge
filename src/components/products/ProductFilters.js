@@ -1,12 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {debounce} from 'lodash';
 
 const ProductFilters = ({onFilterChange}) => {
   const [brand, setBrand] = useState('');
 
+  const debouncedFilter = useCallback(
+    debounce(filterValue => {
+      onFilterChange(filterValue);
+    }, 1500),
+    [onFilterChange],
+  );
+
   const handleBrandChange = text => {
     setBrand(text);
-    onFilterChange(text);
+    debouncedFilter(text);
   };
 
   return (
@@ -17,6 +25,7 @@ const ProductFilters = ({onFilterChange}) => {
         placeholder="Enter brand name"
         value={brand}
         onChangeText={handleBrandChange}
+        autoCorrect={false}
       />
     </View>
   );
