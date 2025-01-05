@@ -17,6 +17,8 @@ end
 target 'ProductListChallenge' do
   config = use_native_modules!
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.

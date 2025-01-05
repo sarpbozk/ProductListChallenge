@@ -8,9 +8,9 @@ const ThemeToggle = ({style}) => {
   return (
     <TouchableOpacity style={style} onPress={toggleTheme}>
       <Icon
-        name={isDarkMode ? 'light-mode' : 'dark-mode'}
+        name={isDarkMode ? 'dark-mode' : 'light-mode'}
         size={24}
-        color={theme.text}
+        color={theme.background}
       />
     </TouchableOpacity>
   );
