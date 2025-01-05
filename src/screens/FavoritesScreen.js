@@ -4,15 +4,18 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useFavorites} from '../contexts/FavoritesContext';
 import {useCart} from '../contexts/CartContext';
 import ProductCard from '../components/common/ProductCard';
+import {useTheme} from '../contexts/ThemeContext';
 
 const FavoritesScreen = ({navigation}) => {
   const {favorites, toggleFavorite} = useFavorites();
   const {addToCart} = useCart();
+  const {theme} = useTheme();
+  const styles = getStyles(theme);
 
   if (favorites.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Icon name="favorite-border" size={64} color="#ccc" />
+        <Icon name="favorite-border" size={64} color={theme.inactive} />
         <Text style={styles.emptyText}>No favorites yet</Text>
         <Text style={styles.emptySubText}>
           Products you favorite will appear here
@@ -51,42 +54,44 @@ const FavoritesScreen = ({navigation}) => {
 
 export default FavoritesScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  listContent: {
-    padding: 8,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  emptyText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 16,
-    color: '#666',
-  },
-  emptySubText: {
-    fontSize: 16,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  browseButton: {
-    backgroundColor: '#f4511e',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginTop: 24,
-  },
-  browseButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-});
+const getStyles = theme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    listContent: {
+      padding: 8,
+    },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+      backgroundColor: theme.background,
+    },
+    emptyText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginTop: 16,
+      color: theme.secondaryText,
+    },
+    emptySubText: {
+      fontSize: 16,
+      color: theme.secondaryText,
+      textAlign: 'center',
+      marginTop: 8,
+    },
+    browseButton: {
+      backgroundColor: theme.primary,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 8,
+      marginTop: 24,
+    },
+    browseButtonText: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: '500',
+    },
+  });

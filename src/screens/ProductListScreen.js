@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   View,
-  StyleSheet,
+  Text,
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  Text,
+  StyleSheet,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -16,6 +16,7 @@ import ProductCard from '../components/common/ProductCard';
 import ProductFilters from '../components/products/ProductFilters';
 import ProductSort from '../components/products/ProductSort';
 import ProductSearch from '../components/products/ProductSearch';
+import {useTheme} from '../contexts/ThemeContext';
 
 const ProductListScreen = () => {
   const navigation = useNavigation();
@@ -30,6 +31,8 @@ const ProductListScreen = () => {
   } = useProducts();
   const {isFavorite, toggleFavorite} = useFavorites();
   const {addToCart} = useCart();
+  const {theme} = useTheme();
+  const styles = getStyles(theme);
 
   const renderHeader = () => (
     <View style={styles.header}>
@@ -42,12 +45,12 @@ const ProductListScreen = () => {
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => navigation.navigate('Favorites')}>
-          <Icon name="favorite" size={24} color="#f4511e" />
+          <Icon name="favorite" size={24} color={theme.primary} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => navigation.navigate('Cart')}>
-          <Icon name="shopping-cart" size={24} color="#f4511e" />
+          <Icon name="shopping-cart" size={24} color={theme.primary} />
         </TouchableOpacity>
       </View>
     </View>
@@ -70,14 +73,18 @@ const ProductListScreen = () => {
 
   if (loading) {
     return (
-      <ActivityIndicator style={styles.loader} size="large" color="#f4511e" />
+      <ActivityIndicator
+        style={styles.loader}
+        size="large"
+        color={theme.primary}
+      />
     );
   }
 
   if (error) {
     return (
       <View style={styles.errorContainer}>
-        <Text>Error: {error}</Text>
+        <Text style={{color: theme.text}}>Error: {error}</Text>
         <TouchableOpacity onPress={refreshProducts}>
           <Text style={styles.retryText}>Retry</Text>
         </TouchableOpacity>
@@ -102,47 +109,49 @@ const ProductListScreen = () => {
 
 export default ProductListScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  filterSortContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  navigationIcons: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 16,
-  },
-  iconButton: {
-    marginLeft: 16,
-    padding: 8,
-  },
-  listContent: {
-    paddingBottom: 16,
-  },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  retryText: {
-    color: '#f4511e',
-    marginTop: 8,
-    fontWeight: 'bold',
-  },
-});
+const getStyles = theme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    header: {
+      padding: 16,
+      backgroundColor: theme.card,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.border,
+    },
+    filterSortContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 16,
+    },
+    navigationIcons: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginTop: 16,
+    },
+    iconButton: {
+      marginLeft: 16,
+      padding: 8,
+    },
+    listContent: {
+      paddingBottom: 16,
+    },
+    loader: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    errorContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.background,
+    },
+    retryText: {
+      color: theme.primary,
+      marginTop: 8,
+      fontWeight: 'bold',
+    },
+  });

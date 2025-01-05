@@ -5,7 +5,6 @@ import {useTheme} from '../../contexts/ThemeContext';
 
 const ThemeToggle = ({style}) => {
   const {isDarkMode, toggleTheme, theme} = useTheme();
-
   return (
     <TouchableOpacity style={style} onPress={toggleTheme}>
       <Icon
